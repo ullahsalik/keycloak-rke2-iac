@@ -1,3 +1,8 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # handlers file for rke2
+- name: Restart rke2
+  systemd:
+    name: rke2-server
+    state: restarted
+    daemon_reload: true

@@ -16,4 +16,4 @@
       /usr/bin/rke2-uninstall.sh
     fi
   args:
-    warn: false
+    executable: /bin/bash

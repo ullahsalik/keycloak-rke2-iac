@@ -13,7 +13,7 @@
   copy:
     dest: /etc/rancher/rke2/config.yaml
     content: |
-      write-kubeconfig-mode: "{{ rke2_config.write-kubeconfig-mode }}"
+      write-kubeconfig-mode: "{{ rke2_config['write-kubeconfig-mode'] }}"
   notify: Restart rke2
 
 - name: Enable and start rke2-server
