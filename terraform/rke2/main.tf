@@ -18,4 +18,3 @@ resource "null_resource" "rke2_install" {
     ]
   }
 }
-

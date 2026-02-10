@@ -1,0 +1,6 @@
+- hosts: rke2
+  become: true
+  tasks:
+    - import_role:
+        name: rke2
+        tasks_from: uninstall.yml

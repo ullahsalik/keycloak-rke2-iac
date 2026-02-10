@@ -1,0 +1,19 @@
+- name: Stop RKE2 services
+  systemd:
+    name: "{{ item }}"
+    state: stopped
+    enabled: false
+  loop:
+    - rke2-server
+    - rke2-agent
+  ignore_errors: true
+
+- name: Run RKE2 uninstall script if present
+  shell: |
+    if [ -x /usr/local/bin/rke2-uninstall.sh ]; then
+      /usr/local/bin/rke2-uninstall.sh
+    elif [ -x /usr/bin/rke2-uninstall.sh ]; then
+      /usr/bin/rke2-uninstall.sh
+    fi
+  args:
+    warn: false

@@ -1,0 +1,6 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for rke2
+- import_tasks: preflight.yml
+- import_tasks: install.yml
+- import_tasks: kubeconfig.yml

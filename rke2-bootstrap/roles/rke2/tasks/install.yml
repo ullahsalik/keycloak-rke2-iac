@@ -1,0 +1,23 @@
+- name: Install RKE2 server
+  shell: curl -sfL https://get.rke2.io | sh -
+  args:
+    creates: /usr/local/bin/rke2
+
+- name: Create RKE2 config directory
+  file:
+    path: /etc/rancher/rke2
+    state: directory
+    mode: 0755
+
+- name: Configure RKE2
+  copy:
+    dest: /etc/rancher/rke2/config.yaml
+    content: |
+      write-kubeconfig-mode: "{{ rke2_config.write-kubeconfig-mode }}"
+  notify: Restart rke2
+
+- name: Enable and start rke2-server
+  systemd:
+    name: rke2-server
+    enabled: true
+    state: started
