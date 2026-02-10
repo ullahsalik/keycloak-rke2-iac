@@ -36,8 +36,8 @@ echo "Installing RKE2 server"
 curl -sfL https://get.rke2.io | sh -
 
 echo "Enabling RKE2 service"
-systemctl enable rke2-server
-systemctl start rke2-server
+systemctl enable rke2-server.service
+sudo systemctl start rke2-server.service
 
 echo "Applying rke2/config.yaml settings"
 cat <<EOF >/etc/rancher/rke2/config.yaml
@@ -66,6 +66,26 @@ cat <<EOF >/etc/profile.d/rke2.sh
 export PATH=\$PATH:/var/lib/rancher/rke2/bin
 EOF
 
+
 echo "RKE2 installation complete"
 echo "Run: kubectl get nodes"
+
+curl -fsSL https://get.pulumi.com | sh
+PULUMI_PATH="$HOME/.pulumi/bin"
+
+if [ -d "$PULUMI_PATH" ]; then
+    echo " Found Pulumi directory at $PULUMI_PATH"
+    if ! grep -q "$PULUMI_PATH" "$HOME/.bashrc"; then
+        echo "export PATH=\$PATH:$PULUMI_PATH" >> "$HOME/.bashrc"
+    else
+        echo "ℹ️ Pulumi path already exists in .bashrc"
+    fi
+
+    export PATH="$PATH:$PULUMI_PATH"
+    
+    pulumi version
+else
+    echo "Error: Pulumi directory not found at $PULUMI_PATH"
+    echo "Please ensure Pulumi was installed correctly."
+fi
 
