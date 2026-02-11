@@ -1,7 +1,7 @@
 
 # 🛡️ Keycloak Deployment: RKE2 + Pulumi (IaC)
 
-This repository provides a complete automation pipeline to deploy a hardened, single-node **RKE2** Kubernetes cluster and a production-ready **Keycloak** instance with a PostgreSQL backend.
+This repository provides a complete automation pipeline to deploy a hardened, single-node **RKE2** Kubernetes cluster and a **Keycloak** instance with a PostgreSQL backend and self-signed certificate.
 
 ## 📋 Project Overview
 
