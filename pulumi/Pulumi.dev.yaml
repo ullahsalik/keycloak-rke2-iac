@@ -3,4 +3,4 @@ config:
   keycloak-iac:adminPassword:
     secure: v1:B7VN2pjfn6YMWWXr:hrW39hGLEpzxwf+CtJhUbULwUjtWHf10kPDCew+fSySdYiTP1A==
   keycloak-iac:dbPassword:
-    secure: v1:FaU5Mva+TA4PFBom:eIaixHA+BQfY6zwg/l0xvpXF/vck6f3BomJQoWs=
+    secure: v1:2lav3jH6fzKOhSfg:9/9Ui2UC6D7uHW9b5ZHGzNYeo1YkGQvfnTrhFoqZ
