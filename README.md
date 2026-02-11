@@ -12,8 +12,8 @@ This repository provides a complete automation pipeline to deploy a hardened, si
 
 ## Prerequisites
 - Local Machine: Ansible, Pulumi (Python), and kubectl installed.
-- Target Node: A fresh Ubuntu 24.04/25.04 VM with SSH access.
-- Network: Ports 80, 443, and 6443 must be open.
+- Target Node: A fresh Ubuntu 24.04/25.04 VM with SSH access and python 3 installed.
+- Network: Ports 80, 443, and 6443 must be open from local machine.
 
 ---
 

@@ -1,6 +1,5 @@
-encryptionsalt: v1:nED4Tp/WfcI=:v1:6xPc4LpyCoWUAipx:hpwGEUiftL+B+VUhGuavAA5GfiAWiQ==
 config:
-  keycloak-iac:adminPassword:
-    secure: v1:B7VN2pjfn6YMWWXr:hrW39hGLEpzxwf+CtJhUbULwUjtWHf10kPDCew+fSySdYiTP1A==
+  kubernetes:configPath: /Users/salik.usmani/.kube/config-rke2
   keycloak-iac:dbPassword:
-    secure: v1:2lav3jH6fzKOhSfg:9/9Ui2UC6D7uHW9b5ZHGzNYeo1YkGQvfnTrhFoqZ
+    secure: v1:4EzyMbXSzo1HHDl4:na6gTPpcRshseIp/ZLI7Ng2pnrplsvyswQ31/RK8
+encryptionsalt: v1:4p86JlHFLBw=:v1:br1KjOcokIB8bDfC:uY07ai44sYElVIvBAhrexstv3HcfZQ==
