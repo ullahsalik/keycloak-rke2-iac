@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.pyre/
+.pytype/
+.cache/
+*.pyc
+*.pyo
+
+# Virtual environments
+*/venv/
+ENV/
+env/
+.env
+.venv/
+venv.bak/
+
+# Packaging / distribution
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+*.whl
+*.egg
+pip-delete-this-directory.txt
+pip-log.txt
+htmlcov/
+.coverage
+.coverage.*
+
+# IDEs / editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Pulumi
+.pulumi/
+pulumi-debug.log
+Pulumi.*.backup
+
+# Optional: local stack state or stack config (uncomment if you don't want to commit)
+# Pulumi.*.json
+# Pulumi.*.yaml
