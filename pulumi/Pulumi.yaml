@@ -1,0 +1,11 @@
+name: keycloak-iac
+description: Infrastructure for keycloak on kubernetes
+runtime:
+  name: python
+  options:
+    toolchain: pip
+    virtualenv: venv
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: kubernetes-python

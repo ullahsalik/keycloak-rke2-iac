@@ -1,0 +1,6 @@
+encryptionsalt: v1:nED4Tp/WfcI=:v1:6xPc4LpyCoWUAipx:hpwGEUiftL+B+VUhGuavAA5GfiAWiQ==
+config:
+  keycloak-iac:adminPassword:
+    secure: v1:B7VN2pjfn6YMWWXr:hrW39hGLEpzxwf+CtJhUbULwUjtWHf10kPDCew+fSySdYiTP1A==
+  keycloak-iac:dbPassword:
+    secure: v1:FaU5Mva+TA4PFBom:eIaixHA+BQfY6zwg/l0xvpXF/vck6f3BomJQoWs=
