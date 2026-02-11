@@ -22,7 +22,8 @@ This repository provides a complete automation pipeline to deploy a hardened, si
 First clone this git repo on local, we use Ansible to install RKE2 on Ubuntu VM. RKE2 is a secure-by-default Kubernetes distribution.
 
 1. **Update Inventory**:
-Edit `rke2-bootstrap/inventory/hosts.ini` (or your equivalent) with your VM's IP:
+Edit `rke2-bootstrap/inventory/hosts.ini` (or your equivalent) with new VM's IP:
+
 ```ini
 [rke2]
 rke2-master ansible_host=<host-ip> ansible_port=22
