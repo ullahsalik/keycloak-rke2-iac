@@ -38,8 +38,9 @@ ansible_ssh_private_key_file=<private-key path>
 
 2. **Run the Playbook**:
 Execute the RKE2 installation script:
+
 ```bash
-cd rke2-bootstrap
+cd keycloak-rke2-iac/rke2-bootstrap
 ansible-playbook playbooks/rke2-install.yml
 ```
 
