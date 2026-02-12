@@ -10,6 +10,8 @@ This repository contains a fully reproducible Infrastructure as Code (IaC) setup
 * **NGINX Ingress**
 * **Self-signed TLS** for HTTPS access
 
+![Screen Short](img/keycloak.png)
+
 ---
 
 # 🏗 Architecture Overview
