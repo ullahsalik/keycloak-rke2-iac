@@ -48,9 +48,9 @@ This repository contains a fully reproducible Infrastructure as Code (IaC) setup
   * `80` (HTTP)
   * `443` (HTTPS)
 
-RKE2 will be deployed on a dedicated Ubuntu VM rather than a local container-based cluster (e.g., Kind or k3d) because RKE2 is a full Kubernetes distribution designed to run on a Linux host with system-level components (systemd, containerd, CNI, iptables) and is not supported to run inside containers.
+> ⚠️ RKE2 will be deployed on a dedicated Ubuntu VM rather than a local container-based cluster (e.g., Kind or k3d) because RKE2 is a full Kubernetes distribution designed to run on a Linux host with system-level components (systemd, containerd, CNI, iptables) and is not supported to run inside containers.
 
-Using a VM enables full OS-level automation with Ansible, demonstrates RKE2’s host-based security capabilities, and provides realistic Ingress and HTTPS handling through direct binding of ports 80 and 443.
+> Using a VM enables full OS-level automation with Ansible, demonstrates RKE2’s host-based security capabilities, and provides realistic Ingress and HTTPS handling through direct binding of ports 80 and 443.
 
 
 ---
