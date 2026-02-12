@@ -177,6 +177,8 @@ Pulumi will deploy:
 * Ingress
 * TLS Secret
 
+![Screen Short](img/pulumi.png)
+
 ---
 
 ## Step 4: Access Keycloak
