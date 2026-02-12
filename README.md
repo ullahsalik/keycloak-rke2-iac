@@ -1,128 +1,279 @@
+# 🛡️ Keycloak Deployment on RKE2 using Pulumi (IaC)
 
-# 🛡️ Keycloak Deployment: RKE2 + Pulumi (IaC)
+### Submission Repository
 
-This repository provides a complete automation pipeline to deploy a hardened, single-node **RKE2** Kubernetes cluster and a **Keycloak** instance with a PostgreSQL backend and self-signed certificate.
+This repository contains a fully reproducible Infrastructure as Code (IaC) setup to deploy:
 
-## 📋 Project Overview
-
-* **Provisioning**: Bootstraping the RKE2 single node cluster using ansible.
-* **Configuration**: Kubeconfig management on local
-* **Deployment**: Pulumi Python (Keycloak + PostgreSQL)
-* **Security**: Self-signed HTTPS/TLS, automated secret management.
-
-## Prerequisites
-- Local Machine: Ansible, Pulumi (Python), and kubectl installed.
-- Target Node: A fresh Ubuntu 24.04/25.04 VM with SSH access and python 3 installed.
-- Network: Ports 80, 443, and 6443 must be open from local machine.
+* A single-node **RKE2 Kubernetes cluster**
+* **PostgreSQL** as external database
+* **Keycloak** deployed via Pulumi (Python)
+* **NGINX Ingress**
+* **Self-signed TLS** for HTTPS access
 
 ---
 
-### Step 1: Bootstraping the RKE2 single node cluster using Ansible
+# 🏗 Architecture Overview
 
-First clone this git repo on local, we use Ansible to install RKE2 on Ubuntu VM. RKE2 is a secure-by-default Kubernetes distribution.
+| Layer          | Implementation            |
+| -------------- | ------------------------- |
+| Kubernetes     | RKE2 (single-node) over VM        |
+| Provisioning   | Ansible                   |
+| IaC Deployment | Pulumi (Python)           |
+| Database       | PostgreSQL (Bitnami Helm) |
+| Identity       | Keycloak (Bitnami Helm)   |
+| Ingress        | NGINX Ingress             |
+| TLS            | Self-Signed Certificate   |
 
-1. **Update Inventory**:
-Edit `rke2-bootstrap/inventory/hosts.ini` (or your equivalent) with new VM's IP:
+---
+
+# ⚙️ Setup Instructions
+
+---
+
+## Prerequisites
+
+### Local Machine
+
+* Ansible installed
+* Pulumi (Python runtime)
+* kubectl
+* SSH access to VM
+
+### Target VM
+
+- Ubuntu 24.04 / 25.04
+- Python3 installed
+- Ports open:
+  * `6443` (Kubernetes API)
+  * `80` (HTTP)
+  * `443` (HTTPS)
+
+RKE2 will be deployed on a dedicated Ubuntu VM rather than a container-based cluster (e.g., Kind or k3d) because RKE2 is a full Kubernetes distribution designed to run on a Linux host with system-level components (systemd, containerd, CNI, iptables) and is not supported to run inside containers.
+
+Using a VM enables full OS-level automation with Ansible, demonstrates RKE2’s host-based security capabilities, and provides realistic Ingress and HTTPS handling through direct binding of ports 80 and 443.
+
+
+---
+
+## Step 1: Bootstrap RKE2 Cluster (Ansible)
+
+Clone the repository:
+
+```bash
+git clone <repo-url>
+cd keycloak-rke2-iac/rke2-bootstrap
+```
+
+### Update Inventory
+
+Edit:
+
+```ini
+rke2-bootstrap/inventory/hosts.ini
+```
+
+Example:
 
 ```ini
 [rke2]
-rke2-master ansible_host=<host-ip> ansible_port=22
+rke2-master ansible_host=<VM-IP> ansible_port=22
 
 [rke2:vars]
 ansible_user=<vm-username>
 ansible_become=true
 ansible_python_interpreter=/usr/bin/python3
-ansible_ssh_private_key_file=<private-key path>
+ansible_ssh_private_key_file=<private-key-path>
 ```
 
-
-2. **Run the Playbook**:
-Execute the RKE2 installation script:
+### Run Playbook
 
 ```bash
-cd keycloak-rke2-iac/rke2-bootstrap
 ansible-playbook playbooks/rke2-install.yml
 ```
 
+This installs:
 
-*This script installs the RKE2 server, enables the service, and prepares the cluster.*
+* RKE2 server
+* kubeconfig
+* Enables and starts the service
 
 ---
 
-### Step 2: Accessing the Cluster
+## Step 2: Configure kubectl Access
 
-Once Ansible completes, we need to pull the cluster credentials (`kubeconfig`) from the VM to our local machine so Pulumi can deploy to it.
+Copy kubeconfig from VM:
 
-1. **Copy the k8s Config**:
 ```bash
-# Create a local dir for the config
 mkdir -p ~/.kube
 
-# SCP the rke2.yaml from the VM to your local machine
-scp ubuntu@<VM-IP>:~/.kube/config ~/.kube/config-rke2
+scp <vm-user>@<VM-IP>:~/.kube/config ~/.kube/config-rke2
 ```
 
-2. **Update the IP Address**:
-Open `~/.kube/config-rke2` locally and change the server URL from `https://127.0.0.1:6443` to `https://<VM-IP>:6443`.
+Edit the server address in:
 
-3. **Set your Environment**:
+```
+~/.kube/config-rke2
+```
+
+Change:
+
+```
+https://127.0.0.1:6443
+```
+
+To:
+
+```
+https://<VM-IP>:6443
+```
+
+Export environment:
+
 ```bash
 export KUBECONFIG=~/.kube/config-rke2
-
-# Verify connection
 kubectl get nodes
 ```
 
+You should see the RKE2 node ready.
+
 ---
 
-### Step 3: Application Deployment (Pulumi)
+## Step 3: Deploy Application Stack (Pulumi)
 
-With cluster access verified, use Pulumi to deploy the application stack.
+Navigate to Pulumi directory:
 
-1. Log in to the Local Filesystem
-```sh
-cd keycloak-rke2-iac/pulumi/
+```bash
+cd keycloak-rke2-iac/pulumi
+```
+
+Login locally:
+
+```bash
 pulumi login --local
 ```
 
-2. Set the Local Configuration for kube config file
-``` 
-pulumi config set kubernetes:configPath ~/.kube/config-rke2 
+Set Kubernetes config:
+
+```bash
+pulumi config set kubernetes:configPath ~/.kube/config-rke2
 ```
 
-3. Initialize Pulumi Secrets for DB:
+Set database password securely:
+
 ```bash
 pulumi config set dbPassword --secret
 ```
 
-2. **Deploy**:
+Deploy:
+
 ```bash
 pulumi up
 ```
 
-*Pulumi will now deploy PostgreSQL and Keycloak, including the Ingress and TLS secrets we configured.*
+Pulumi will deploy:
+
+* PostgreSQL
+* Keycloak
+* Ingress
+* TLS Secret
 
 ---
 
-### Step 4: Accessing the Keycloak Dashboard
+## Step 4: Access Keycloak
 
-Since we are using `keycloak.local`, you must map the IP address in your local machine's `hosts` file.
+Because we are using a custom hostname (`keycloak.local`), update your local hosts file:
 
-1. **Update Local Hosts File**:
-* **Linux/Mac**: `sudo vim /etc/hosts`
-* **Windows**: `notepad C:\Windows\System32\drivers\etc\hosts` (as Admin)
+### Linux / Mac
 
-Add this line:
-```text
-<VM-IP>  keycloak.local
+```bash
+sudo vim /etc/hosts
 ```
 
-2. **Retrieve the Admin Password (Decoded)**:
+### Windows (Run as Admin)
+
+```
+C:\Windows\System32\drivers\etc\hosts
+```
+
+Add:
+
+```
+<VM-IP> keycloak.local
+```
+
+---
+
+## 🌐 Access URL
+
+```
+https://keycloak.local
+```
+
+> ⚠️ Since we are using a self-signed certificate, your browser will show a security warning.
+> Click **Advanced → Proceed to keycloak.local (unsafe)**.
+
+---
+
+# 🔐 Keycloak Login Credentials
+
+| Field    | Value                       |
+| -------- | --------------------------- |
+| Username | `admin`                     |
+| Password | Retrieved via Pulumi secret |
+
+To retrieve the admin password:
 
 ```bash
 kubectl get secret keycloak -o jsonpath='{.data.admin-password}' | base64 --decode
 ```
 
-3. **Open the Dashboard**:
-Navigate to [https://keycloak.local](https://www.google.com/search?q=https://keycloak.local) in your browser.
-> **Note**: Because we are using a self-signed certificate, you will see a "Not Secure" warning. Click **Advanced** -> **Proceed to keycloak.local (unsafe)** to reach the login page.
+---
+
+# 📌 Assumptions & Notes
+
+* Single-node RKE2 cluster for simplicity.
+* Persistence disabled for PostgreSQL (can be enabled for production).
+* Self-signed TLS used for local secure access.
+* Designed for reproducibility via IaC (Pulumi).
+* Not production-hardened (no HA, no backup, no monitoring stack).
+
+---
+
+# ⏱ Total Time Spent
+
+Approximately **6–8 hours**, including:
+
+* Infrastructure bootstrap
+* Pulumi stack development
+* Ingress + TLS configuration
+* Testing & debugging
+* Documentation
+
+---
+
+# 🧹 Cleanup
+
+To remove application stack:
+
+```bash
+pulumi destroy
+```
+
+To remove RKE2:
+
+```bash
+ansible-playbook playbooks/rke2-uninstall.yml
+```
+
+---
+
+# Summary
+
+This repository demonstrates:
+
+* Infrastructure as Code principles
+* Secure cluster bootstrap
+* External database integration
+* TLS-enabled ingress
+* Reproducible deployment
+* Clean documentation and operational workflow
