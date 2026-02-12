@@ -245,7 +245,7 @@ kubectl get secret keycloak -o jsonpath='{.data.admin-password}' | base64 --deco
 
 # ⏱ Total Time Spent
 
-Approximately **6–8 hours**, including:
+Approximately **7 hours**, including:
 
 * Infrastructure bootstrap
 * Pulumi stack development
