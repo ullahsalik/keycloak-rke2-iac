@@ -44,6 +44,7 @@ This repository contains a fully reproducible Infrastructure as Code (IaC) setup
 ### Target VM
 
 - Ubuntu 24.04 / 25.04
+- Minimum 2 CPU & 4GB Memory
 - Python3 installed
 - Ports open:
   * `6443` (Kubernetes API)
