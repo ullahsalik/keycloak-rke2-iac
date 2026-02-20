@@ -66,7 +66,7 @@ git clone <repo-url>
 cd keycloak-rke2-iac/rke2-bootstrap
 ```
 
-### Step 1.1 Update Inventory
+Step 1.1 Update Inventory
 
 Edit:
 
@@ -87,7 +87,7 @@ ansible_python_interpreter=/usr/bin/python3
 ansible_ssh_private_key_file=<private-key-path>
 ```
 
-### Step 1.2 Run Playbook
+Step 1.2 Run Playbook
 
 ```bash
 ansible-playbook playbooks/rke2-install.yml
