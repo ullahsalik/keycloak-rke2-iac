@@ -44,6 +44,7 @@ This repository contains a fully reproducible Infrastructure as Code (IaC) setup
 ### Target VM
 
 - Ubuntu 24.04 / 25.04
+- Minimum 2 CPU & 4GB Memory
 - Python3 installed
 - Ports open:
   * `6443` (Kubernetes API)
@@ -87,7 +88,7 @@ ansible_python_interpreter=/usr/bin/python3
 ansible_ssh_private_key_file=<private-key-path>
 ```
 
-### Step 1.2 Run Playbook
+### Step 1.2 Run Playbook to bootstrap the cluster
 
 ```bash
 ansible-playbook playbooks/rke2-install.yml
@@ -98,75 +99,47 @@ This installs:
 * RKE2 server
 * kubeconfig
 * Enables and starts the service
+* Setup kubeconfig on local to connect with the RKE2 Cluster
 
 ---
 
-## Step 2: Configure kubectl Access
+## Step 2: Deploy Application Stack (Pulumi)
 
-### Step 2.1: Copy kubeconfig from VM:
-
-```bash
-mkdir -p ~/.kube
-
-scp <vm-user>@<VM-IP>:~/.kube/config ~/.kube/config-rke2
-```
-
-### Step 2.2: Edit the server address in:
-
-```
-~/.kube/config-rke2
-```
-
-Change:
-
-```
-https://127.0.0.1:6443
-```
-
-To:
-
-```
-https://<VM-IP>:6443
-```
-
-### Step 2.3: Export environment:
+### Step 2.1: Configure the KUBECONFIG:
 
 ```bash
 export KUBECONFIG=~/.kube/config-rke2
 kubectl get nodes
 ```
 
-You should see the RKE2 node ready.
+You should see the RKE2 node ready on local.
 
----
 
-## Step 3: Deploy Application Stack (Pulumi)
-
-### Step 3.1: Navigate to Pulumi directory:
+### Step 2.2: Navigate to Pulumi directory:
 
 ```bash
 cd keycloak-rke2-iac/pulumi
 ```
 
-### Step 3.2: Login locally:
+### Step 2.3: Login locally:
 
 ```bash
 pulumi login --local
 ```
 
-### Step 3.3: Set Kubernetes config:
+### Step 2.4: Set Kubernetes config:
 
 ```bash
 pulumi config set kubernetes:configPath ~/.kube/config-rke2
 ```
 
-### Step 3.4: Set database password securely:
+### Step 2.5: Set database password securely:
 
 ```bash
 pulumi config set dbPassword --secret
 ```
 
-### Step 3.5: Deploy:
+### Step 2.6: Deploy:
 
 ```bash
 pulumi up
@@ -183,9 +156,9 @@ Pulumi will deploy:
 
 ---
 
-## Step 4: Access Keycloak
+## Step 3: Access Keycloak
 
-### Step 4.1:
+### Step 3.1: Configure the domain on local
 Because we are using a custom hostname (`keycloak.local`), update your local hosts file:
 
 ### Linux / Mac
