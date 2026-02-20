@@ -66,7 +66,7 @@ git clone <repo-url>
 cd keycloak-rke2-iac/rke2-bootstrap
 ```
 
-### Update Inventory
+### Step 1.1 Update Inventory
 
 Edit:
 
@@ -87,7 +87,7 @@ ansible_python_interpreter=/usr/bin/python3
 ansible_ssh_private_key_file=<private-key-path>
 ```
 
-### Run Playbook
+### Step 1.2 Run Playbook
 
 ```bash
 ansible-playbook playbooks/rke2-install.yml
@@ -103,7 +103,7 @@ This installs:
 
 ## Step 2: Configure kubectl Access
 
-Copy kubeconfig from VM:
+Step 2.1: Copy kubeconfig from VM:
 
 ```bash
 mkdir -p ~/.kube
@@ -111,7 +111,7 @@ mkdir -p ~/.kube
 scp <vm-user>@<VM-IP>:~/.kube/config ~/.kube/config-rke2
 ```
 
-Edit the server address in:
+Step 2.2: Edit the server address in:
 
 ```
 ~/.kube/config-rke2
@@ -129,7 +129,7 @@ To:
 https://<VM-IP>:6443
 ```
 
-Export environment:
+Step 2.3: Export environment:
 
 ```bash
 export KUBECONFIG=~/.kube/config-rke2
@@ -142,31 +142,31 @@ You should see the RKE2 node ready.
 
 ## Step 3: Deploy Application Stack (Pulumi)
 
-Navigate to Pulumi directory:
+Step 3.1: Navigate to Pulumi directory:
 
 ```bash
 cd keycloak-rke2-iac/pulumi
 ```
 
-Login locally:
+Step 3.2: Login locally:
 
 ```bash
 pulumi login --local
 ```
 
-Set Kubernetes config:
+Step 3.3: Set Kubernetes config:
 
 ```bash
 pulumi config set kubernetes:configPath ~/.kube/config-rke2
 ```
 
-Set database password securely:
+Step 3.4: Set database password securely:
 
 ```bash
 pulumi config set dbPassword --secret
 ```
 
-Deploy:
+Step 3.5: Deploy:
 
 ```bash
 pulumi up
