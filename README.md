@@ -63,7 +63,6 @@ Clone the repository:
 
 ```bash
 git clone <repo-url>
-cd keycloak-rke2-iac/rke2-bootstrap
 ```
 
 ### Step 1.1 Update Inventory
@@ -71,7 +70,8 @@ cd keycloak-rke2-iac/rke2-bootstrap
 Edit:
 
 ```ini
-rke2-bootstrap/inventory/hosts.ini
+cd keycloak-rke2-iac/rke2-bootstrap
+vim rke2-bootstrap/inventory/hosts.ini
 ```
 
 Example:
