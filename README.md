@@ -157,7 +157,7 @@ Pulumi will deploy:
 
 ## Step 3: Access Keycloak
 
-### Step 3.1:
+### Step 3.1: Configure the domain on local
 Because we are using a custom hostname (`keycloak.local`), update your local hosts file:
 
 ### Linux / Mac
