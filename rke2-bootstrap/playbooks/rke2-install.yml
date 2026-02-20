@@ -2,3 +2,29 @@
   become: true
   roles:
     - rke2
+
+# Local Configuration and Application Deployment
+- hosts: localhost
+  connection: local
+  vars:
+    vm_ip: "{{ hostvars['rke2-master']['ansible_host'] }}"
+    vm_user: "{{ hostvars['rke2-master']['ansible_user'] }}"
+    ansible_port: "{{ hostvars['rke2-master']['ansible_port'] | default(22) }}"
+    kubeconfig_local: "~/.kube/config-rke2"
+    pulumi_dir: "{{ playbook_dir }}/../../pulumi"
+  
+  tasks:
+    - name: Ensure local .kube directory exists
+      file:
+        path: "~/.kube"
+        state: directory
+        mode: '0700'
+
+    - name: Step 2.1 - Fetch kubeconfig from VM
+      command: "scp -P {{ ansible_port }} -o StrictHostKeyChecking=no {{ vm_user }}@{{ vm_ip }}:~/.kube/config {{ kubeconfig_local }}"
+
+    - name: Step 2.2 - Update server IP in local kubeconfig
+      replace:
+        path: "{{ kubeconfig_local }}"
+        regexp: 'https://127.0.0.1:6443'
+        replace: "https://{{ vm_ip }}:6443"
